@@ -164,6 +164,8 @@ class ResourceGauges(object):
                 "how much block inbound this {0} used")
         self.add_task_and_service_gauge("{0}_block_out_byte",
                 "how much block outbound this {0} used")
+        self.add_task_and_service_gauge("{0}_ssh_use",
+                "is the ssh this {0} used")
 
         self.add_gauge("task_gpu_percent",
                 "how much percent of gpu core this task used",
@@ -542,7 +544,6 @@ class ContainerCollector(Collector):
         "pylon",
         "webportal",
         "grafana",
-        "prometheus-pushgateway",
         "prometheus",
         "alertmanager",
         "watchdog",
@@ -720,6 +721,21 @@ class ContainerCollector(Collector):
             gauges.add_value("task_block_in_byte", container_labels, stats["BlockIO"]["in"])
             gauges.add_value("task_block_out_byte", container_labels, stats["BlockIO"]["out"])
             gauges.add_value("task_mem_usage_percent", container_labels, stats["MemPerc"])
+
+            try:
+                # cmd = 'docker exec ' + container_id + ' w -h|awk \'{print $1,$3}\''
+                cmd = 'docker exec ' + container_id + ' w -h'
+                p = subprocess.check_output(["bash","-c", cmd],stderr=subprocess.STDOUT,timeout=5)
+                logger.debug("---------ssh user info(w -h):" + str(p))
+                if(p):
+                    gauges.add_value("task_ssh_use", container_labels, 1)
+                else:
+                    gauges.add_value("task_ssh_use", container_labels, 0)
+             
+            except subprocess.TimeoutExpired as time_e:
+                print(time_e)
+            except subprocess.CalledProcessError as call_e:
+                print(call_e.output.decode(encoding="utf-8"))
         else:
             labels = {"name": pai_service_name}
             gauges.add_value("service_cpu_percent", labels, stats["CPUPerc"])
@@ -926,3 +942,4 @@ class ProcessCollector(Collector):
             return [zombie_metrics, process_mem_metrics]
 
         return None
+### lixiao
