@@ -97,7 +97,7 @@ def parse_iftop(iftop_output, duration=40):
         else:
             if part == 1:
                 data.append(line)
-
+    
     for line_no in range(0, len(data), 2):
         line1 = data[line_no].split()
         line2 = data[line_no + 1].split()
@@ -121,6 +121,7 @@ def parse_iftop(iftop_output, duration=40):
 
         result[dst]["in"] += out_byte
         result[dst]["out"] += in_byte
+        result[dst]["isdst"] = True
 
     return result
 

@@ -166,6 +166,7 @@ class ResourceGauges(object):
                 "how much block outbound this {0} used")
         self.add_task_and_service_gauge("{0}_ssh_use",
                 "is the ssh this {0} used")
+        
 
         self.add_gauge("task_gpu_percent",
                 "how much percent of gpu core this task used",
@@ -173,6 +174,12 @@ class ResourceGauges(object):
         self.add_gauge("task_gpu_mem_percent",
                 "how much percent of gpu memory this task used",
                 self.task_labels_gpu)
+        self.add_gauge("network_per_ip_in",
+                "how much per ip net traffic",
+                ['ip','conn','port'])
+        self.add_gauge("network_per_ip_out",
+                "how much per ip net traffic",
+                ['ip','conn','port'])
 
     def add_task_and_service_gauge(self, name_tmpl, desc_tmpl):
         self.add_gauge(
@@ -753,6 +760,22 @@ class ContainerCollector(Collector):
             return None
 
         gauges = ResourceGauges()
+
+
+        for conn in all_conns:
+            
+            if 'isdst' in all_conns[conn]:
+                if(not conn):
+                    continue
+                #这里是故意写反的哈，具体可以看代码
+                result_labels = {}
+                result_labels['conn'] = conn
+                conn_arr = conn.split(':')
+                result_labels['ip'] = conn_arr[0]
+                if(len(conn_arr) > 1):
+                    result_labels['port'] = conn_arr[1]
+                gauges.add_value("network_per_ip_out", result_labels, all_conns[conn]["in"])
+                gauges.add_value("network_per_ip_in", result_labels, all_conns[conn]["out"])
 
         for container_id, stats in stats_obj.items():
             try:
