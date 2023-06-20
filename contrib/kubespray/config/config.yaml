@@ -26,8 +26,8 @@ docker_image_tag: v1.8.1
 #####################################
 # OpenPAI's service image registry. #
 #####################################
-# docker_registry_domain: docker.io
-# docker_registry_namespace: openpai
+docker_registry_domain: 192.168.99.199:8080
+docker_registry_namespace: aird
 # docker_registry_username: exampleuser
 # docker_registry_password: examplepasswd
 
@@ -55,13 +55,13 @@ docker_image_tag: v1.8.1
 ## An obvious use case is allowing insecure-registry access to self hosted registries.
 ## Can be ipaddress and domain_name.
 ## example define 172.19.16.11 or mirror.registry.io
-# openpai_docker_insecure_registries:
-#   - mirror.registry.io
+openpai_docker_insecure_registries:
+  - 192.168.99.199:8080
 #   - 172.19.16.11
 
 ## Add other registry,example China registry mirror.
-# openpai_docker_registry_mirrors:
-#   - https://registry.docker-cn.com
+openpai_docker_registry_mirrors:
+  - 192.168.99.199:8080
 #   - https://mirror.aliyuncs.com
 
 #######################################################################
@@ -69,12 +69,20 @@ docker_image_tag: v1.8.1
 #######################################################################
 
 # If you couldn't access to gcr.io or docker.io, please configure it.
-# gcr_image_repo: "gcr.io"
-# kube_image_repo: "gcr.io/google-containers"
-# quay_image_repo: "quay.io"
-# docker_image_repo: "docker.io"
-# etcd_image_repo: "quay.io/coreos/etcd"
-# pod_infra_image_repo: "gcr.io/google_containers/pause-{{ image_arch }}"
+
+quay_image_repo: "192.168.99.199:8080/quay_io"
+docker_image_repo: "192.168.99.199:8080"
+etcd_image_repo: "192.168.99.199:8080/quay_io/coreos/etcd"
+kube_image_repo: "siaimes"
+gcr_image_repo: "siaimes"
+pod_infra_image_repo: "siaimes/pause-{{ image_arch }}"
+dnsautoscaler_image_repo: "siaimes/cluster-proportional-autoscaler-{{ image_arch }}"
+kubeadm_download_url: "http://192.168.99.9:10000/k8s-share/kubernetes-release/release/{{ kubeadm_version }}/bin/linux/{{ image_arch }}/kubeadm"
+hyperkube_download_url: "http://192.168.99.9:10000/k8s-share/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/hyperkube"
+cni_download_url: "http://192.168.99.9:10000/k8s-share/containernetworking/plugins/releases/download/{{ cni_version }}/cni-plugins-linux-{{ image_arch }}-{{ cni_version }}.tgz"
+calicoctl_download_url: "http://192.168.99.9:10000/k8s-share/projectcalico/calicoctl/releases/download/{{ calico_ctl_version }}/calicoctl-linux-{{ image_arch }}"
+
+
 # kubeadm_download_url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubeadm_version }}/bin/linux/{{ image_arch }}/kubeadm"
 # hyperkube_download_url: "https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/hyperkube"
 
@@ -83,7 +91,12 @@ docker_image_tag: v1.8.1
 # openpai_kubespray_extra_var:
 #   key: value
 #   key: value
-
+openpai_kubespray_extra_var:
+  #当download_run_once为true且download_localhost为false时，所有下载将在委托节点上完成，包括该节点上不需要的容器镜像的下载。结果，该节点上所需的存储可能比download_run_once为false时要多，因为所有映像都将加载到该节点上的docker实例中，而不仅仅是该节点所需的映像。
+  download_run_once: true
+  download_localhost: false
+  #默认存在/tmp/kubespray_cache
+  download_keep_remote_cache: true
 # Ref: https://github.com/microsoft/pai/issues/5150
 # kubelet_custom_flags:
 #   serialize-image-pulls: "false"

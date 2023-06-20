@@ -65,7 +65,7 @@ spec:
           - '--web.external-url={{ external_url }}/prometheus/'
           - '--web.route-prefix=prometheus'
           - '--storage.tsdb.path=/prometheus-data'
-          - '--storage.tsdb.retention=31d'
+          - '--storage.tsdb.retention=300d'
         ports:
         - name: web
           containerPort: {{prometheus_port}}

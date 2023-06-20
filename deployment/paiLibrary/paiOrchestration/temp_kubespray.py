@@ -35,9 +35,13 @@ class TempKubespray:
 
     def _clone_kubespray(self):
         self._logger.info("Begin to clone Kubespray 2.11 from GitHub")
+        # linux_shell.execute_shell_raise(
+        #     shell_cmd="git clone -b release-2.11 https://github.com/kubernetes-sigs/kubespray.git {}".format(self._tmp_dir),
+        #     error_msg="Failed to clone Kubespray 2.11 from GitHub"
+        # )
         linux_shell.execute_shell_raise(
-            shell_cmd="git clone -b release-2.11 https://github.com/kubernetes-sigs/kubespray.git {}".format(self._tmp_dir),
-            error_msg="Failed to clone Kubespray 2.11 from GitHub"
+            shell_cmd="cp -r /pai/custom/tempKubespray/* {}".format(self._tmp_dir),
+            error_msg="Failed to copy Kubespray 2.11 from /pai/custom/tempKubespray/"
         )
 
     def _modify_files(self):
