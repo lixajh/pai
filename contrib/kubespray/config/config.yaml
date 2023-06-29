@@ -70,13 +70,13 @@ openpai_docker_registry_mirrors:
 
 # If you couldn't access to gcr.io or docker.io, please configure it.
 
-quay_image_repo: "192.168.99.199:8080/quay_io"
-docker_image_repo: "192.168.99.199:8080"
-etcd_image_repo: "192.168.99.199:8080/quay_io/coreos/etcd"
-kube_image_repo: "siaimes"
-gcr_image_repo: "siaimes"
-pod_infra_image_repo: "siaimes/pause-{{ image_arch }}"
-dnsautoscaler_image_repo: "siaimes/cluster-proportional-autoscaler-{{ image_arch }}"
+quay_image_repo: "192.168.99.199:8080/aird/quay_io"
+docker_image_repo: "192.168.99.199:8080/aird"
+etcd_image_repo: "192.168.99.199:8080/aird/quay_io/coreos/etcd"
+kube_image_repo: "192.168.99.199:8080/aird/gcr_io/google-containers"
+gcr_image_repo: "192.168.99.199:8080/aird/gcr_io"
+pod_infra_image_repo: "192.168.99.199:8080/aird/gcr_io/google_containers/pause-{{ image_arch }}"
+#dnsautoscaler_image_repo: "siaimes/cluster-proportional-autoscaler-{{ image_arch }}"
 kubeadm_download_url: "http://192.168.99.9:10000/k8s-share/kubernetes-release/release/{{ kubeadm_version }}/bin/linux/{{ image_arch }}/kubeadm"
 hyperkube_download_url: "http://192.168.99.9:10000/k8s-share/kubernetes-release/release/{{ kube_version }}/bin/linux/{{ image_arch }}/hyperkube"
 cni_download_url: "http://192.168.99.9:10000/k8s-share/containernetworking/plugins/releases/download/{{ cni_version }}/cni-plugins-linux-{{ image_arch }}-{{ cni_version }}.tgz"
@@ -92,11 +92,12 @@ calicoctl_download_url: "http://192.168.99.9:10000/k8s-share/projectcalico/calic
 #   key: value
 #   key: value
 openpai_kubespray_extra_var:
-  #当download_run_once为true且download_localhost为false时，所有下载将在委托节点上完成，包括该节点上不需要的容器镜像的下载。结果，该节点上所需的存储可能比download_run_once为false时要多，因为所有映像都将加载到该节点上的docker实例中，而不仅仅是该节点所需的映像。
+  #when download_run_once is true and download_localhost is false 
   download_run_once: true
   download_localhost: false
-  #默认存在/tmp/kubespray_cache
+  #default save at /tmp/kubespray_cache
   download_keep_remote_cache: true
+  skip_downloads: true
 # Ref: https://github.com/microsoft/pai/issues/5150
 # kubelet_custom_flags:
 #   serialize-image-pulls: "false"
@@ -106,3 +107,4 @@ openpai_kubespray_extra_var:
 #######################################################################
 # host_daemon_port_start: 40000
 # host_daemon_port_end: 65535
+

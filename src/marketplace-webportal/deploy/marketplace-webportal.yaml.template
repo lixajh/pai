@@ -18,8 +18,8 @@ spec:
       hostNetwork: true
       containers:
       - name: marketplace-webportal
-        image: openpai/pai-marketplace-webportal:latest
-        imagePullPolicy: Always
+        image: 192.168.99.199:8080/aird/pai-marketplace-webportal:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: MARKETPLACE_API_URL
 {%- if 'marketplace_api_uri' in cluster_cfg['marketplace-webportal'] %}

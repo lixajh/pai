@@ -18,8 +18,8 @@ spec:
       hostNetwork: true
       containers:
       - name: marketplace-restserver
-        image: openpai/pai-marketplace-restserver:latest
-        imagePullPolicy: Always
+        image: 192.168.99.199:8080/aird/pai-marketplace-restserver:latest
+        imagePullPolicy: IfNotPresent
         env:
         - name: DB_HOST
           value: {{ cluster_cfg["marketplace-restserver"]["db_host"] }}
