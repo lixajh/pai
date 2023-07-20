@@ -46,8 +46,9 @@ class DockerClient:
 
 
     def docker_login(self):
-        shell_cmd = "docker login -u {0} -p {1} {2}".format(self.docker_username, self.docker_password, self.docker_registry)
-        execute_shell(shell_cmd)
+        # shell_cmd = "docker login -u {0} -p {1} {2}".format(self.docker_username, self.docker_password, self.docker_registry)
+        # execute_shell(shell_cmd)
+        pass
 
 
     def docker_image_build(self, image_name, dockerfile_path, build_path):
