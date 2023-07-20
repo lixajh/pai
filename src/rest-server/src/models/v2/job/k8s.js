@@ -484,6 +484,8 @@ const generateTaskRole = (
                 config.prerequisites.dockerimage[
                   config.taskRoles[taskRole].dockerImage
                 ].uri,
+              ports:
+                [{hostPort: 8896,containerPort: 8896}],
               command: ['/usr/local/pai/runtime'],
               resources: {
                 limits: {

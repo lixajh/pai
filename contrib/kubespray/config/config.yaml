@@ -97,7 +97,7 @@ openpai_kubespray_extra_var:
   download_localhost: false
   #default save at /tmp/kubespray_cache
   download_keep_remote_cache: true
-  skip_downloads: true
+# skip_downloads: true
 # Ref: https://github.com/microsoft/pai/issues/5150
 # kubelet_custom_flags:
 #   serialize-image-pulls: "false"
