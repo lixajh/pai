@@ -256,6 +256,9 @@ const protocolSchema = {
                 gpu: {
                   type: 'integer',
                 },
+                hostPort: {
+                  type: 'integer',
+                },
                 ports: {
                   patternProperties: {
                     '^[a-zA-Z_][a-zA-Z0-9_]*$': {

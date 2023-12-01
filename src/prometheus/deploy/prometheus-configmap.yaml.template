@@ -63,3 +63,6 @@ data:
           static_configs:
           - targets:
             - {{ cluster_cfg['alert-manager']['host'] }}:{{ alert_manager_port }}
+        - static_configs:
+          - targets:
+            - {{ cluster_cfg['alert-manager']['host'] }}:39093

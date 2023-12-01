@@ -355,6 +355,7 @@ const generateTaskRole = (
   frameworkEnvList,
   config,
 ) => {
+
   const ports = config.taskRoles[taskRole].resourcePerInstance.ports || {};
   for (const port of ['ssh', 'http']) {
     if (!(port in ports)) {
@@ -484,8 +485,6 @@ const generateTaskRole = (
                 config.prerequisites.dockerimage[
                   config.taskRoles[taskRole].dockerImage
                 ].uri,
-              ports:
-                [{hostPort: 8896,containerPort: 8896}],
               command: ['/usr/local/pai/runtime'],
               resources: {
                 limits: {
@@ -533,6 +532,10 @@ const generateTaskRole = (
                   }/${convertName(taskRole)}`,
                   mountPath: '/usr/local/pai/logs',
                 },
+                {
+                  name: 'huawei-data',
+                  mountPath: '/huawei-data',
+                },
               ],
             },
           ],
@@ -543,6 +546,12 @@ const generateTaskRole = (
                 medium: 'Memory',
                 sizeLimit: `${shmMB}Mi`,
               },
+            },
+            {
+              name: 'huawei-data',
+              hostPath: {
+                path: `/data`,
+              }
             },
             {
               name: 'pai-vol',
@@ -588,6 +597,27 @@ const generateTaskRole = (
       },
     },
   };
+  try {
+    
+    if('hostPort' in config.taskRoles[taskRole].resourcePerInstance && !isNaN(config.taskRoles[taskRole].resourcePerInstance.hostPort)){
+      logger.warn('------config.taskRoles.resourcePerInstance.hostPort:' + config.taskRoles[taskRole].resourcePerInstance.hostPort)
+      // const {taskRoles:{resourcePerInstance:hostPort}} = config
+      // if(hostPort < 1000){
+      //   return '非法port'
+      // }
+      // frameworkTaskRole.task.pod.spec.containers[0].ports = [{hostPort: hostPort,containerPort: hostPort}];
+      frameworkTaskRole.task.pod.spec.containers[0].ports = [{hostPort: config.taskRoles[taskRole].resourcePerInstance.hostPort,containerPort: config.taskRoles[taskRole].resourcePerInstance.hostPort}];
+
+      logger.warn(frameworkTaskRole.task.pod.spec.containers[0])
+      logger.warn(frameworkTaskRole.task.pod.spec.containers[0].ports)
+    }else{
+      logger.warn('------config.taskroles.resourcePerInstance.hostPort is nan')
+    }
+  } catch (error) {
+    logger.warn(error)
+    return 'hostport error'
+  }
+  
   // add image pull secret
   if (
     config.prerequisites.dockerimage[config.taskRoles[taskRole].dockerImage]

@@ -33,7 +33,7 @@ spec:
       hostPID: false
       containers:
       - name: webportal
-        image: {{ cluster_cfg['cluster']['docker-registry']['prefix'] }}webportal:{{ cluster_cfg['cluster']['docker-registry']['tag'] }}
+        image: {{ cluster_cfg['cluster']['docker-registry']['prefix'] }}webportal:nodeport
         imagePullPolicy: Always
         env:
         - name: LAUNCHER_TYPE

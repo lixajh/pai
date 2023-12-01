@@ -59,6 +59,7 @@ export const taskRoleSchema = Joi.object().keys({
       memoryMB: Joi.number().required(),
       gpu: Joi.number().required(),
       ports: Joi.object().pattern(/^[a-zA-Z_][a-zA-Z0-9_]*$/, Joi.number()),
+      hostPort: Joi.number(),
     }),
   commands: Joi.array()
     .items(Joi.string())
